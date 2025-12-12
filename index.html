@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>專案任務排程系統</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Arial', sans-serif; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { color: #333; font-size: 2em; margin-bottom: 10px; }
+        .form-section { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .form-section h2 { color: #333; margin-bottom: 15px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; color: #555; font-weight: bold; }
+        input, select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+        button { background: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; width: 100%; font-size: 1em; margin-top: 10px; }
+        button:hover { background: #45a049; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th { background: #f5f5f5; padding: 12px; text-align: left; border-bottom: 2px solid #ddd; }
+        td { padding: 12px; border-bottom: 1px solid #eee; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📅 專案任務排程系統</h1>
+            <p>管理團隊專案，追蹤進度</p>
+        </header>
+
+        <div class="form-section">
+            <h2>➕ 新增專案</h2>
+            <form id="addProjectForm">
+                <div class="form-group">
+                    <label for="projectName">專案名稱</label>
+                    <input type="text" id="projectName" required>
+                </div>
+                <div class="form-group">
+                    <label for="startDate">開始日期</label>
+                    <input type="date" id="startDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="endDate">結束日期</label>
+                    <input type="date" id="endDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="status">狀態</label>
+                    <select id="status" required>
+                        <option value="未開始">未開始</option>
+                        <option value="進行中">進行中</option>
+                        <option value="已完成">已完成</option>
+                    </select>
+                </div>
+                <button type="submit">送出</button>
+            </form>
+        </div>
+
+        <div class="form-section">
+            <h2>📋 專案清單</h2>
+            <table id="projectsTable">
+                <thead>
+                    <tr>
+                        <th>專案名稱</th>
+                        <th>開始日</th>
+                        <th>結束日</th>
+                        <th>狀態</th>
+                    </tr>
+                </thead>
+                <tbody id="projectsBody">
+                    <tr><td colspan="4" style="text-align: center; color: #999;">正在加載...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        // 需要更新此 URL 為你的 Web App URL
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyt-SWg3YjVU0g0JnuYXAqEM4O1oLfXu0SYMvsK4EB0sl55FgZCGzw0W2XTD/usercontent';
+
+        document.getElementById('addProjectForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('projectName').value;
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            const status = document.getElementById('status').value;
+
+            try {
+                const response = await fetch(WEB_APP_URL + '?action=addProject', {
+                    method: 'POST',
+                    body: JSON.stringify({ name, startDate, endDate, status })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert('專案已成功新增！');
+                    document.getElementById('addProjectForm').reset();
+                    loadProjects();
+                }
+            } catch (error) {
+                alert('錯誤：' + error.message);
+            }
+        });
+
+        async function loadProjects() {
+            try {
+                const response = await fetch(WEB_APP_URL + '?action=getProjects');
+                const result = await response.json();
+                const tbody = document.getElementById('projectsBody');
+                if (result.success && result.data.length > 0) {
+                    tbody.innerHTML = result.data.map(p => `
+                        <tr>
+                            <td>${p.project_name || ''}</td>
+                            <td>${p.start_date || ''}</td>
+                            <td>${p.end_date || ''}</td>
+                            <td>${p.status || ''}</td>
+                        </tr>
+                    `).join('');
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #999;">暂無專案</td></tr>';
+                }
+            } catch (error) {
+                console.error('加載錯誤：', error);
+            }
+        }
+
+        loadProjects();
+    </script>
+</body>
+</html>
