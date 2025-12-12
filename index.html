@@ -25,62 +25,141 @@
 <body>
     <div class="container">
         <header>
-            <h1>📅 專案任務排程系統</h1>
-            <p>管理團隊專案，追蹤進度</p>
+            <h1>📄 專案任務排程系統</h1>
+            <p>管理团隊專案，追踪進度</p>
         </header>
 
+        <!-- 客戶管理機能 -->
         <div class="form-section">
-            <h2>➕ 新增專案</h2>
+            <h2>🆕 新增客戶</h2>
+            <form id="addCustomerForm">
+                <div class="form-group">
+                    <label for="customerName">客戶名稱 *</label>
+                    <input type="text" id="customerName" required>
+                </div>
+                <div class="form-group">
+                    <label for="contactPerson">联絡人</label>
+                    <input type="text" id="contactPerson">
+                </div>
+                <div class="form-group">
+                    <label for="phone">電話</label>
+                    <input type="text" id="phone">
+                </div>
+                <div class="form-group">
+                    <label for="address">地址</label>
+                    <input type="text" id="address">
+                </div>
+                <div class="form-group">
+                    <label for="taxId">統編</label>
+                    <input type="text" id="taxId">
+                </div>
+                <button type="submit">d上架客戶</button>
+            </form>
+        </div>
+
+        <!-- 客戶清單 -->
+        <div class="form-section">
+            <h2>📄 客戶清單</h2>
+            <table id="customerTable">
+                <thead>
+                    <tr>
+                        <th>客戶名稱</th>
+                        <th>联絡人</th>
+                        <th>電話</th>
+                        <th>地址</th>
+                        <th>統編</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <!-- 专案表單 -->
+        <div class="form-section">
+            <h2>➡ 新增專案</h2>
             <form id="addProjectForm">
                 <div class="form-group">
-                    <label for="projectName">專案名稱</label>
+                    <label for="customerSelect">客戶名稱 *</label>
+                    <select id="customerSelect" required>
+                        <option value="">下拉選擇客戶</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="projectName">專案名稱 *</label>
                     <input type="text" id="projectName" required>
                 </div>
                 <div class="form-group">
                     <label for="startDate">開始日期</label>
-                    <input type="date" id="startDate" required>
+                    <input type="date" id="startDate">
                 </div>
                 <div class="form-group">
                     <label for="endDate">結束日期</label>
-                    <input type="date" id="endDate" required>
+                    <input type="date" id="endDate">
                 </div>
                 <div class="form-group">
-                    <label for="status">狀態</label>
-                    <select id="status" required>
-                        <option value="未開始">未開始</option>
+                    <label for="status">狀态</label>
+                    <select id="status">
                         <option value="進行中">進行中</option>
-                        <option value="已完成">已完成</option>
+                        <option value="将開著">将開著</option>
+                        <option value="完成">完成</option>
                     </select>
                 </div>
-                <button type="submit">送出</button>
+                <button type="submit">新增專案</button>
             </form>
         </div>
 
+        <!-- 專案清單 -->
         <div class="form-section">
             <h2>📋 專案清單</h2>
-            <table id="projectsTable">
+            <table id="projectTable">
                 <thead>
                     <tr>
+                        <th>客戶名稱</th>
                         <th>專案名稱</th>
-                        <th>開始日</th>
-                        <th>結束日</th>
-                        <th>狀態</th>
+                        <th>開始日期</th>
+                        <th>結束日期</th>
+                        <th>狀态</th>
                     </tr>
                 </thead>
-                <tbody id="projectsBody">
-                    <tr><td colspan="4" style="text-align: center; color: #999;">正在加載...</td></tr>
-                </tbody>
+                <tbody></tbody>
             </table>
         </div>
     </div>
 
     <script>
-        // 需要更新此 URL 為你的 Web App URL
-        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyt-SWg3YjVU0g0JnuYXAqEM4O1oLfXu0SYMvsK4EB0sl55FgZCGzw0W2XTD/usercontent';
+        const WEB_APP_URL = 'https://script.google.com/macros/s/AKfycbyt-5Wg3VJVUge1nUYXAqEM40lofXu0SYmyK4E8s155FgZCG2w0x2Xl7DZRFDh_-IW2X4/usercontent';
+
+        document.getElementById('addCustomerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('customerName').value;
+            const contact = document.getElementById('contactPerson').value;
+            const phone = document.getElementById('phone').value;
+            const address = document.getElementById('address').value;
+            const taxId = document.getElementById('taxId').value;
+
+            try {
+                const response = await fetch(WEB_APP_URL + '?action=addCustomer', {
+                    method: 'POST',
+                    body: JSON.stringify({name, contact, phone, address, taxId})
+                });
+                const result = await response.json();
+                if (result.success) {
+                    alert('客戶已新增!');
+                    document.getElementById('addCustomerForm').reset();
+                    loadCustomers();
+                } else {
+                    alert('新增客戶失敗!');
+                }
+            } catch (error) {
+                console.error('提交客戶墨橋:', error);
+                alert('提交客戶失敗!');
+            }
+        });
 
         document.getElementById('addProjectForm').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const name = document.getElementById('projectName').value;
+            const customerId = document.getElementById('customerSelect').value;
+            const projectName = document.getElementById('projectName').value;
             const startDate = document.getElementById('startDate').value;
             const endDate = document.getElementById('endDate').value;
             const status = document.getElementById('status').value;
@@ -88,42 +167,73 @@
             try {
                 const response = await fetch(WEB_APP_URL + '?action=addProject', {
                     method: 'POST',
-                    body: JSON.stringify({ name, startDate, endDate, status })
+                    body: JSON.stringify({customerId, projectName, startDate, endDate, status})
                 });
                 const result = await response.json();
-                if (result.success) {
-                    alert('專案已成功新增！');
+                if (result.success && result.data.length > 0) {
+                    alert('專案已新增!');
                     document.getElementById('addProjectForm').reset();
                     loadProjects();
+                } else {
+                    alert('新增專案失敗!');
                 }
             } catch (error) {
-                alert('錯誤：' + error.message);
+                console.error('提交專案墨橋:', error);
+                alert('提交專案失敗!');
             }
         });
+
+        async function loadCustomers() {
+            try {
+                const response = await fetch(WEB_APP_URL + '?action=getCustomers');
+                const result = await response.json();
+                const tbody = document.querySelector('#customerTable tbody');
+                const select = document.getElementById('customerSelect');
+                tbody.innerHTML = '';
+                select.innerHTML = '<option value="">下拉選擇客戶</option>';
+                
+                if (result.success && result.data.length > 0) {
+                    result.data.forEach(c => {
+                        const row = tbody.insertRow();
+                        row.innerHTML = `<td>${c.name || ''}</td><td>${c.contact || ''}</td><td>${c.phone || ''}</td><td>${c.address || ''}</td><td>${c.taxId || ''}</td>`;
+                        const option = document.createElement('option');
+                        option.value = c.id;
+                        option.text = c.name;
+                        select.appendChild(option);
+                    });
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">沒有客戶</td></tr>';
+                }
+            } catch (error) {
+                console.error('載入客戶墨橋:', error);
+            }
+        }
 
         async function loadProjects() {
             try {
                 const response = await fetch(WEB_APP_URL + '?action=getProjects');
                 const result = await response.json();
-                const tbody = document.getElementById('projectsBody');
+                const tbody = document.querySelector('#projectTable tbody');
+                tbody.innerHTML = '';
+                
                 if (result.success && result.data.length > 0) {
-                    tbody.innerHTML = result.data.map(p => `
-                        <tr>
-                            <td>${p.project_name || ''}</td>
-                            <td>${p.start_date || ''}</td>
-                            <td>${p.end_date || ''}</td>
-                            <td>${p.status || ''}</td>
-                        </tr>
-                    `).join('');
+                    result.data.forEach(p => {
+                        const row = tbody.insertRow();
+                        row.innerHTML = `<td>${p.customer_name || ''}</td><td>${p.project_name || ''}</td><td>${p.start_date || ''}</td><td>${p.end_date || ''}</td><td>${p.status || ''}</td>`;
+                    });
                 } else {
-                    tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #999;">暂無專案</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">沒有專案</td></tr>';
                 }
             } catch (error) {
-                console.error('加載錯誤：', error);
+                console.error('載入專案墨橋:', error);
             }
         }
 
-        loadProjects();
+        // 頁面載入時載入客戶和專案數據
+        window.addEventListener('load', () => {
+            loadCustomers();
+            loadProjects();
+        });
     </script>
 </body>
 </html>
