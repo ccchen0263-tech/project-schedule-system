@@ -26,34 +26,34 @@
     <div class="container">
         <header>
             <h1>📄 專案任務排程系統</h1>
-            <p>管理团隊專案，追踪進度</p>
+            <p>管理員幫云專案，追踪進度</p>
         </header>
 
-        <!-- 客戶管理機能 -->
+        <!-- 新增客戶表單 -->
         <div class="form-section">
-            <h2>🆕 新增客戶</h2>
+            <h2>🇑 新增客戶</h2>
             <form id="addCustomerForm">
                 <div class="form-group">
-                    <label for="customerName">客戶名稱 *</label>
+                    <label>客戶名稱 *</label>
                     <input type="text" id="customerName" required>
                 </div>
                 <div class="form-group">
-                    <label for="contactPerson">联絡人</label>
+                    <label>联統人</label>
                     <input type="text" id="contactPerson">
                 </div>
                 <div class="form-group">
-                    <label for="phone">電話</label>
+                    <label>電話</label>
                     <input type="text" id="phone">
                 </div>
                 <div class="form-group">
-                    <label for="address">地址</label>
+                    <label>地址</label>
                     <input type="text" id="address">
                 </div>
                 <div class="form-group">
-                    <label for="taxId">統編</label>
+                    <label>統編</label>
                     <input type="text" id="taxId">
                 </div>
-                <button type="submit">d上架客戶</button>
+                <button type="submit">上架客戶</button>
             </form>
         </div>
 
@@ -64,43 +64,44 @@
                 <thead>
                     <tr>
                         <th>客戶名稱</th>
-                        <th>联絡人</th>
+                        <th>联統人</th>
                         <th>電話</th>
                         <th>地址</th>
                         <th>統編</th>
                     </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody>
+                </tbody>
             </table>
         </div>
 
-        <!-- 专案表單 -->
+        <!-- 新增專案表單 -->
         <div class="form-section">
             <h2>➡ 新增專案</h2>
             <form id="addProjectForm">
                 <div class="form-group">
-                    <label for="customerSelect">客戶名稱 *</label>
+                    <label>客戶名稱 *</label>
                     <select id="customerSelect" required>
                         <option value="">下拉選擇客戶</option>
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="projectName">專案名稱 *</label>
+                    <label>專案名稱 *</label>
                     <input type="text" id="projectName" required>
                 </div>
                 <div class="form-group">
-                    <label for="startDate">開始日期</label>
+                    <label>開始日期</label>
                     <input type="date" id="startDate">
                 </div>
                 <div class="form-group">
-                    <label for="endDate">結束日期</label>
+                    <label>結束日期</label>
                     <input type="date" id="endDate">
                 </div>
                 <div class="form-group">
-                    <label for="status">狀态</label>
+                    <label>狀态</label>
                     <select id="status">
                         <option value="進行中">進行中</option>
-                        <option value="将開著">将開著</option>
+                        <option value="將開始">將開始</option>
                         <option value="完成">完成</option>
                     </select>
                 </div>
@@ -121,7 +122,8 @@
                         <th>狀态</th>
                     </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody>
+                </tbody>
             </table>
         </div>
     </div>
@@ -136,7 +138,6 @@
             const phone = document.getElementById('phone').value;
             const address = document.getElementById('address').value;
             const taxId = document.getElementById('taxId').value;
-
             try {
                 const response = await fetch(WEB_APP_URL + '?action=addCustomer', {
                     method: 'POST',
@@ -151,8 +152,8 @@
                     alert('新增客戶失敗!');
                 }
             } catch (error) {
-                console.error('提交客戶墨橋:', error);
-                alert('提交客戶失敗!');
+                console.error('提交客戶失敗:', error);
+                alert('提交客戶失敗: ' + error.message);
             }
         });
 
@@ -163,7 +164,6 @@
             const startDate = document.getElementById('startDate').value;
             const endDate = document.getElementById('endDate').value;
             const status = document.getElementById('status').value;
-
             try {
                 const response = await fetch(WEB_APP_URL + '?action=addProject', {
                     method: 'POST',
@@ -178,8 +178,8 @@
                     alert('新增專案失敗!');
                 }
             } catch (error) {
-                console.error('提交專案墨橋:', error);
-                alert('提交專案失敗!');
+                console.error('提交專案失敗:', error);
+                alert('提交專案失敗: ' + error.message);
             }
         });
 
@@ -191,7 +191,6 @@
                 const select = document.getElementById('customerSelect');
                 tbody.innerHTML = '';
                 select.innerHTML = '<option value="">下拉選擇客戶</option>';
-                
                 if (result.success && result.data.length > 0) {
                     result.data.forEach(c => {
                         const row = tbody.insertRow();
@@ -205,7 +204,7 @@
                     tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">沒有客戶</td></tr>';
                 }
             } catch (error) {
-                console.error('載入客戶墨橋:', error);
+                console.error('載入客戶失敗:', error);
             }
         }
 
@@ -215,7 +214,6 @@
                 const result = await response.json();
                 const tbody = document.querySelector('#projectTable tbody');
                 tbody.innerHTML = '';
-                
                 if (result.success && result.data.length > 0) {
                     result.data.forEach(p => {
                         const row = tbody.insertRow();
@@ -225,7 +223,7 @@
                     tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">沒有專案</td></tr>';
                 }
             } catch (error) {
-                console.error('載入專案墨橋:', error);
+                console.error('載入專案失敗:', error);
             }
         }
 
