@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>客戶搜尋</title>
+  <style>body{font-family:Arial;margin:24px}</style>
+</head>
+<body>
+  <h1>客戶搜尋</h1>
+  <input id="q" placeholder="姓名或手機" />
+  <button id="search">搜尋</button>
+  <pre id="result">尚未搜尋</pre>
+  <p><a href="index.html">回首頁</a></p>
+  <script>
+    document.getElementById('search').addEventListener('click', ()=>{
+      const q = document.getElementById('q').value;
+      document.getElementById('result').textContent = `關鍵字：${q}\n請接 Clients 分頁搜尋`; 
+    });
+  </script>
+</body>
+</html>

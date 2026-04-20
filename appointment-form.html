@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>新增預約</title>
+  <style>body{font-family:Arial;margin:24px}label{display:block;margin:8px 0}</style>
+</head>
+<body>
+  <h1>新增預約</h1>
+  <label>client_id <input id="client_id" /></label>
+  <label>appointment_date <input id="appointment_date" type="date" /></label>
+  <label>staff_id <input id="staff_id" /></label>
+  <label>session_id <input id="session_id" /></label>
+  <label>start_at <input id="start_at" placeholder="2026-04-20T09:00:00+08:00" /></label>
+  <label>end_at <input id="end_at" placeholder="2026-04-20T09:30:00+08:00" /></label>
+  <button id="submit">送出</button>
+  <pre id="result"></pre>
+  <p><a href="index.html">回首頁</a></p>
+  <script>
+    document.getElementById('submit').addEventListener('click', ()=>{
+      const payload = {
+        client_id: document.getElementById('client_id').value,
+        appointment_date: document.getElementById('appointment_date').value,
+        status: 'booked',
+        segments: [{
+          service_type_id: 'svc_initial',
+          role: 'consultant',
+          staff_id: document.getElementById('staff_id').value,
+          session_id: document.getElementById('session_id').value,
+          start_at: document.getElementById('start_at').value,
+          end_at: document.getElementById('end_at').value,
+          duration_min: 30
+        }]
+      };
+      document.getElementById('result').textContent = JSON.stringify(payload, null, 2) + '\n請接 AppointmentService.create(payload)';
+    });
+  </script>
+</body>
+</html>

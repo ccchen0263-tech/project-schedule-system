@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>操作日誌</title>
+  <style>body{font-family:Arial;margin:24px} table{border-collapse:collapse;width:100%}th,td{border:1px solid #ddd;padding:8px}</style>
+</head>
+<body>
+  <h1>操作日誌</h1>
+  <button id="load">載入最近 200 筆</button>
+  <table>
+    <thead><tr><th>action</th><th>actor</th><th>target</th><th>created_at</th></tr></thead>
+    <tbody id="tbody"></tbody>
+  </table>
+  <p><a href="index.html">回首頁</a></p>
+  <script>
+    document.getElementById('load').addEventListener('click', ()=>{
+      document.getElementById('tbody').innerHTML = '<tr><td colspan="4">請接 AdminService.listLogs()</td></tr>';
+    });
+  </script>
+</body>
+</html>

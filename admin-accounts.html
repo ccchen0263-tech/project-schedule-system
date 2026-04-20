@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>管理帳號</title>
+  <style>body{font-family:Arial;margin:24px}label{display:block;margin:8px 0}</style>
+</head>
+<body>
+  <h1>管理帳號</h1>
+  <label>Email <input id="email" /></label>
+  <label>Name <input id="name" /></label>
+  <label>Role <input id="role" placeholder="owner/admin/manager/staff/viewer" /></label>
+  <button id="save">儲存</button>
+  <pre id="result"></pre>
+  <p><a href="index.html">回首頁</a></p>
+  <script>
+    document.getElementById('save').addEventListener('click', ()=>{
+      const payload = {
+        email: document.getElementById('email').value,
+        name: document.getElementById('name').value,
+        role: document.getElementById('role').value,
+      };
+      document.getElementById('result').textContent = JSON.stringify(payload, null, 2) + '\n請接 AdminService.upsertAdmin(payload)';
+    });
+  </script>
+</body>
+</html>
