@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard</title>
+  <style>body{font-family:Arial;margin:24px} .kpi{display:inline-block;padding:12px 16px;border:1px solid #ddd;border-radius:8px;margin-right:8px}</style>
+</head>
+<body>
+  <h1>Dashboard</h1>
+  <div class="kpi">今日預約: <span id="today-count">-</span></div>
+  <div class="kpi">我的角色: <span id="my-role">-</span></div>
+  <p><a href="index.html">回首頁</a></p>
+  <script>
+    // 前端示意，實際 Apps Script 可由 google.script.run 注入資料
+    document.getElementById('today-count').textContent = '請接 Apps Script';
+    document.getElementById('my-role').textContent = '請接 AuthService.me()';
+  </script>
+</body>
+</html>
